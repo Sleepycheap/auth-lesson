@@ -1,0 +1,27 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Creation Error</title>
+  <link rel="stylesheet" type="text/css" href="/css/error.css">
+</head>
+
+<body>
+  <h1>There was an error creating your account</h1>
+  <h2>Please fix the following errors and try creating your account again</h2>
+
+  <div id="errors">
+    <% array.forEach(error=> { %>
+      <p>
+        <%= error.path%>:
+          <%= error.msg %>
+      </p>
+      <% }); %>
+  </div>
+
+
+  <a href="/sign-up">Please try creating account again</a>
+</body>
+
+</html>
