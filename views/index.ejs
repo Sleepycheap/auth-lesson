@@ -8,14 +8,40 @@
 
 <body>
   <% if (locals.user) {%>
-    <h1>WELCOME BACK <%= user.username %>
-    </h1>
-    <form action="/join" method="POST">
-      <label for="code">Enter secret code to join our special membership!</label>
-      <input for="code" name="code" type="text">
-      <button type="submit">Join Membership</button>
-    </form>
-    <a href="/log-out">LOG OUT</a>
+    <div id="locals">
+      <h1 id="header">WELCOME BACK <%= user.fname %>
+      </h1>
+      <form action="/join" method="POST">
+        <label for="code">Enter secret code to join our special membership!</label>
+        <input for="code" name="code" type="text">
+        <input for="username" name="username" id="hide" type="text" value="<%= user.username %>">
+        <button type="submit">Join Membership</button>
+      </form>
+      <a href="/log-out">LOG OUT</a>
+    </div>
+
+    <div id="messages">
+      <% messages.forEach(message=> { %>
+        <div class="message-block">
+          <h1 class="title">
+            Title: <%= message.title %>
+          </h1>
+          <h2 class="author" id="<%=membership%>">
+            User: <%= message.author %>
+          </h2>
+          <h2 class="time" id="<%=membership%>">
+            Date: <%= message.time %>
+          </h2>
+          <p class="text">
+            Message: <%= message.text %>
+          </p>
+        </div>
+        <%});%>
+    </div>
+
+    <a href='/write'><button type="button">Write a message</button></a>
+
+
     <% } else { %>
       <h1>Please log in</h1>
       <form action="/log-in" method="POST">
@@ -25,7 +51,10 @@
         <input id="password" name="password" type="password" />
         <button type="submit">Log In</button>
       </form>
+
+      <a href="/sign-up">Or Create Account</a>
       <%}%>
+
 </body>
 
 </html>

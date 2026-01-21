@@ -10,6 +10,7 @@ import { disconnect } from 'node:process';
 import bcrypt from 'bcryptjs';
 import {body, check, query, validationResult } from 'express-validator';
 import { error } from 'node:console';
+// import { localsName } from 'ejs';
 const dirname = fileURLToPath(new URL('.', import.meta.url));
 const filepath = join(dirname, 'views');
 const assetsPath = join(dirname, '/public');
@@ -20,7 +21,7 @@ const assetsPath = join(dirname, '/public');
 const pool = new Pool({
   host: 'localhost',
   user: 'anthonyauthier',
-  database: 'auth',
+  database: 'messageboard',
   password: '082015',
   port: '5432'
 });
@@ -31,6 +32,11 @@ app.use(express.static(assetsPath));
 app.set("views", filepath);
 app.set("view engine", "ejs");
 app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+})
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
@@ -70,10 +76,44 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
+async function getMessages() {
+  const {rows} = await pool.query('SELECT * FROM messages;');
+  return rows;
+}
 
+// async function getName(user) {
+//   const rows = await pool.query('SELECT fname,lname FROM users WHERE username = $1', [user]);
+//   console.log(`rows: ${rows.rows}`);
+// }
 
-app.get("/", (req, res) => res.render("index", { user: req.user}));
+async function isMember(user) {
+  if (user){
+    const username = user.username
+    const res = await pool.query('SELECT * FROM users WHERE username = $1;', [username]);
+    const membership = res.rows[0].membership;
+    if (membership === 'True') {
+      console.log('Membership', membership);
+      return true
+    } else {
+      console.log('membership', membership);
+      return false
+    }
+  }
+};
+  // const member = await pool.query('SELECT membership FROM users WHERE username = $1', [user]);
+    // console.log('true');
+    // console.log('false');
+
+app.get("/", async (req, res) => res.render('index', 
+  {
+  user: req.user, 
+  messages: await getMessages(),
+  membership: await isMember(req.user)
+}
+));
+
 app.get('/sign-up', (req, res) => res.render('sign-up-form'));
+
 app.post('/sign-up', 
   body('username').notEmpty().isEmail().withMessage('Username must be an email'),
   body('password').isLength({min: 6}).withMessage('password must be at least 6 characters'),
@@ -86,7 +126,9 @@ app.post('/sign-up',
   try {
     if (errors.isEmpty()) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
+      await pool.query("INSERT INTO users (fname, lname, username, password) VALUES ($1, $2, $3, $4)", [
+        req.body.fname,
+        req.body.lname,
         req.body.username,
         hashedPassword
       ]);
@@ -128,3 +170,49 @@ app.listen(8080, (error) => {
 });
 
 app.get('/error', (req, res) => res.render('error'));
+
+app.get('/login-error', (req, res) => res.render('login-error'));
+
+app.post('/join', body('code').custom((value, {req}) => {
+  const codeValue = 'Rohan calls for aid';
+  return value === codeValue
+}).withMessage('That is the incorrect membership code'), async (req, res, next) => {
+  const errors = validationResult(req);
+
+  try {
+    if (errors.isEmpty()) {
+      await pool.query("UPDATE users SET membership = 'True' WHERE username = $1", [
+        req.body.username
+      ])
+      res.redirect('/members-only');
+    } else {
+      const array = errors.errors;
+      res.render('error', {array: array}, (err, ejs) => {
+        res.send(ejs);
+      })
+    }
+  } catch (err) {
+    return next(err);
+  }
+
+}
+)
+
+app.get('/members-only', (req, res) => {
+  if (req.user && req.user.membership === 'True') {
+    res.render('members-only');
+  } else if (req.user && req.user.membership !== 'True') {
+    res.redirect('/not-a-member');
+  }
+});
+
+app.get('/test', (req, res) => {
+  if (req.user) {
+    res.render('test', {value: 'User is signed in', detail: `${req.user.username} is currently signed in`})
+  } else {
+    res.render('test', {value: 'user is not signed in', detail: 'no user is signed in'})
+  }
+});
+
+app.get('/not-a-member', (req, res) => res.render('not-a-member'));
+app.get('/write', (req, res) => res.render('create'));
