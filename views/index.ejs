@@ -23,23 +23,43 @@
     <div id="messages">
       <% messages.forEach(message=> { %>
         <div class="message-block">
-          <h1 class="title">
-            Title: <%= message.title %>
-          </h1>
-          <h2 class="author" id="<%=membership%>">
-            User: <%= message.author %>
-          </h2>
-          <h2 class="time" id="<%=membership%>">
-            Date: <%= message.time %>
-          </h2>
-          <p class="text">
-            Message: <%= message.text %>
-          </p>
+          <table>
+            <thead>
+              <tr>
+                <th id="title" scope="row">Title</th>
+                <th id="author" scope="row">Author</th>
+                <th id="date" scope=" row">Date</th>
+                <th id="message" scope="row">Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <%= message.title %>
+                </td>
+              </tr>
+              <tr class="author" id="<%=membership%>">
+                <td>
+                  <%=message.author%>
+                </td>
+              </tr>
+              <tr class="time" id="<%=membership%>">
+                <td>
+                  <%=message.time%>
+                </td>
+              </tr>
+              <tr class="text">
+                <td>
+                  <%=message.text%>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <%});%>
     </div>
 
-    <a href='/write'><button type="button">Write a message</button></a>
+    <a href='/message'><button type="button">Write a message</button></a>
 
 
     <% } else { %>

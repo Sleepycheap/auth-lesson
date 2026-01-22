@@ -18,6 +18,15 @@ body {
   /* display: grid; */
 }
 
+table {
+  display: grid;
+  border: 2px solid black;
+}
+
+#title {
+  border: 2px solid black;
+}
+/* 
 #header {
   border: 2px solid blue;
 }
@@ -34,7 +43,6 @@ body {
   grid-template-columns: [left] 100px [middle] 200px [mid-right];
   border: 2px solid red;
   width: 350px;
-  /* padding: 20px; */
   margin: 20px;
   text-align: center;
 }
@@ -70,7 +78,7 @@ h2.time {
   grid-column-end: middle;
   grid-row-start: mid-end;
   grid-row-end: end;
-}
+} */
 
 .hide {
   display: none;

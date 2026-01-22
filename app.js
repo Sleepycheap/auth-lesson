@@ -100,9 +100,7 @@ async function isMember(user) {
     }
   }
 };
-  // const member = await pool.query('SELECT membership FROM users WHERE username = $1', [user]);
-    // console.log('true');
-    // console.log('false');
+
 
 app.get("/", async (req, res) => res.render('index', 
   {
@@ -215,4 +213,22 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/not-a-member', (req, res) => res.render('not-a-member'));
-app.get('/write', (req, res) => res.render('create'));
+
+app.get('/message', (req, res) => {
+  console.log(`user: ${req.user.username}`)
+  res.render('message', {author: req.user.username})
+} 
+);
+
+
+app.post('/message', async (req, res, next) => {
+  const date = new Date(Date.now()).toLocaleDateString();
+
+  try {
+    await pool.query('INSERT INTO messages (title, time, text, author) VALUES ($1, $2, $3, $4);', [req.body.title, date, req.body.message, req.body.author]);
+    console.log('message created');
+    res.redirect('/');
+  } catch (err) {
+    return next(err);
+  }
+});

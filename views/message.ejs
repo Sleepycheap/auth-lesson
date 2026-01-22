@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Write a message</title>
+  <link rel="stylesheet" href="/css/message.css">
+</head>
+
+<body>
+  <h1>Write your message</h1>
+  <div class="messsage-create">
+    <form action="/message" method="POST">
+      <label for="title">Title: </label>
+      <input id="title" name="title" type="text" required />
+      <label for="message">Message: </label>
+      <textarea id="message" name="message"
+        placeholder="It was the best of times, it was the worst of times"></textarea>
+      <input for="author" name="author" id="hide" type="text" value="<%= author %>">
+      <button type="submit">Write Message</button>
+    </form>
+  </div>
+</body>
+
+</html>
