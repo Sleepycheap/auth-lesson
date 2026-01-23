@@ -15,7 +15,7 @@
 }
 
 body {
-  /* display: grid; */
+  display: grid;
 }
 
 table {
@@ -23,9 +23,28 @@ table {
   border: 2px solid black;
 }
 
-#title {
-  border: 2px solid black;
+#messages {
+  display: grid;
+  justify-content: center;
+  gap: 20px;
+  /* width: 400px; */
 }
+
+.message-block {
+  /* display: grid; */
+  border-bottom: 2px solid black;
+  /* align-content: center; */
+  /* justify-content: center; */
+}
+
+.header {
+  /* display: grid; */
+  /* border: 2px solid red; */
+}
+
+/* #title {
+  border: 2px solid black;
+} */
 /* 
 #header {
   border: 2px solid blue;

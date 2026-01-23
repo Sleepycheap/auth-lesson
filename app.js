@@ -92,10 +92,10 @@ async function isMember(user) {
     const res = await pool.query('SELECT * FROM users WHERE username = $1;', [username]);
     const membership = res.rows[0].membership;
     if (membership === 'True') {
-      console.log('Membership', membership);
+      // console.log('Membership', membership);
       return true
     } else {
-      console.log('membership', membership);
+      // console.log('membership', membership);
       return false
     }
   }

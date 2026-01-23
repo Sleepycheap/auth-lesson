@@ -20,10 +20,26 @@
       <a href="/log-out">LOG OUT</a>
     </div>
 
+    <a href='/message'><button type="button">Write a message</button></a>
+
     <div id="messages">
       <% messages.forEach(message=> { %>
         <div class="message-block">
-          <table>
+          <div class="header">
+            <h1 class="title">
+              <%=message.title%>
+            </h1>
+            <h2 class="author" id="<%=membership%>">
+              <%=message.author%>
+            </h2>
+          </div>
+          <div class="body">
+            <%=message.text%>
+              <p class="time" id="<%=membership%>">
+                <%=message.time%>
+              </p>
+          </div>
+          <!-- <table>
             <thead>
               <tr>
                 <th id="title" scope="row">Title</th>
@@ -54,13 +70,10 @@
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
         </div>
         <%});%>
     </div>
-
-    <a href='/message'><button type="button">Write a message</button></a>
-
 
     <% } else { %>
       <h1>Please log in</h1>
