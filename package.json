@@ -17,6 +17,7 @@
   "scripts": {
     "start": "node --watch app.js"
   },
+  "type": "module",
   "author": "Anthony Vauthier",
   "license": "ISC"
 }

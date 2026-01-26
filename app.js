@@ -1,6 +1,7 @@
 import 'dotenv/config';
-import path from 'node:path'
 import {Pool} from 'pg';
+import path from 'node:path'
+// import pg from 'pg';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -16,16 +17,28 @@ const dirname = fileURLToPath(new URL('.', import.meta.url));
 const filepath = join(dirname, 'views');
 const assetsPath = join(dirname, '/public');
 
+// dotenv.config({ path: '.env'});
 
-
+// console.log('test', process.env)
+const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
-  host: process.env.PGHOST,
   user: process.env.USER,
+  password: process.env.PASSWORD,
+  host: process.env.HOST,
+  port: process.env.PORT,
   database: process.env.DATABASE,
-  password: process.env.PASSSWORD,
-  port: process.env.PORT
 });
+
+// const pool = new Pool();
+
+// pool.query('SELECT NOW()', (err, res) => {
+//   console.log(err, res);
+//   pool.end();
+// })
+
+
+// const pool = new Pool();
 
 const app = express();
 app.use(express.static(assetsPath));
@@ -78,7 +91,7 @@ passport.deserializeUser(async (id, done) => {
 
 
 async function getMessages() {
-  const {rows} = await pool.query('SELECT * FROM messages;');
+  const {rows} = await pool.query('SELECT * FROM messages');
   return rows;
 }
 
@@ -165,7 +178,7 @@ app.listen(8080, (error) => {
   if (error) {
     throw error;
   }
-  console.log("app listening on port 8080!");
+  console.log(`app listening on port 8080!`);
 });
 
 app.get('/error', (req, res) => res.render('error'));
