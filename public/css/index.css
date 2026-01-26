@@ -15,7 +15,7 @@
 }
 
 body {
-  display: grid;
+  /* display: grid; */
 }
 
 table {
@@ -24,27 +24,38 @@ table {
 }
 
 #messages {
+  border: 2px solid black;
   display: grid;
-  justify-content: center;
+  /* grid-template-columns: [mstart] 400px [mid] 400px [mend]; */
+  /* justify-content: center; */
   gap: 20px;
-  /* width: 400px; */
+  width: 400px;
 }
 
 .message-block {
-  /* display: grid; */
-  border-bottom: 2px solid black;
+  /* display: grid */
+  /* border: 2px solid red; */
+  /* width: 1fr; */
   /* align-content: center; */
   /* justify-content: center; */
 }
 
 .header {
-  /* display: grid; */
-  /* border: 2px solid red; */
+  /* display: grid;
+  grid-template-rows: [title] 200px [hmid] [author] 200px [hend]; 
+  border: 2px solid red; */
+  /* width: 200px; */
 }
 
-/* #title {
-  border: 2px solid black;
-} */
+#locals {
+  /* border: 2px solid blue; */
+}
+
+.title {
+  /* border: 2px solid black;
+  grid-row-start: title;
+  grid-row-end: hmid; */
+}
 /* 
 #header {
   border: 2px solid blue;

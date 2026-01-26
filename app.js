@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import path from 'node:path'
 import {Pool} from 'pg';
 import express from 'express';
@@ -19,11 +20,11 @@ const assetsPath = join(dirname, '/public');
 
 
 const pool = new Pool({
-  host: 'localhost',
-  user: 'anthonyauthier',
-  database: 'messageboard',
-  password: '082015',
-  port: '5432'
+  host: process.env.PGHOST,
+  user: process.env.USER,
+  database: process.env.DATABASE,
+  password: process.env.PASSSWORD,
+  port: process.env.PORT
 });
 
 const app = express();
@@ -91,7 +92,7 @@ async function isMember(user) {
     const username = user.username
     const res = await pool.query('SELECT * FROM users WHERE username = $1;', [username]);
     const membership = res.rows[0].membership;
-    if (membership === 'True') {
+    if (membership) {
       // console.log('Membership', membership);
       return true
     } else {
@@ -179,7 +180,7 @@ app.post('/join', body('code').custom((value, {req}) => {
 
   try {
     if (errors.isEmpty()) {
-      await pool.query("UPDATE users SET membership = 'True' WHERE username = $1", [
+      await pool.query("UPDATE users SET membership = 'TRUE' WHERE username = $1", [
         req.body.username
       ])
       res.redirect('/members-only');
@@ -197,16 +198,17 @@ app.post('/join', body('code').custom((value, {req}) => {
 )
 
 app.get('/members-only', (req, res) => {
-  if (req.user && req.user.membership === 'True') {
+  console.log('member', req.user.membership);
+  if (req.user.membership) {
     res.render('members-only');
-  } else if (req.user && req.user.membership !== 'True') {
+  } else if (!req.user.membership) {
     res.redirect('/not-a-member');
   }
 });
 
 app.get('/test', (req, res) => {
   if (req.user) {
-    res.render('test', {value: 'User is signed in', detail: `${req.user.username} is currently signed in`})
+    res.render('test', {value: 'User is signed in', detail: `${req.user.username} is currently signed in, and their membership status is ${req.user.membership}`})
   } else {
     res.render('test', {value: 'user is not signed in', detail: 'no user is signed in'})
   }

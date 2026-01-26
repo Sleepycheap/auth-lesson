@@ -9,7 +9,7 @@
 <body>
   <% if (locals.user) {%>
     <div id="locals">
-      <h1 id="header">WELCOME BACK <%= user.fname %>
+      <h1 id="header">WELCOME BACK <%= user.fname %>!
       </h1>
       <form action="/join" method="POST">
         <label for="code">Enter secret code to join our special membership!</label>
@@ -17,6 +17,9 @@
         <input for="username" name="username" id="hide" type="text" value="<%= user.username %>">
         <button type="submit">Join Membership</button>
       </form>
+      <a href="/members-only">Members, come hang out here!</a>
+      <br>
+      <br>
       <a href="/log-out">LOG OUT</a>
     </div>
 
